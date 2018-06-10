@@ -13,6 +13,12 @@ n = 1600; %分段长度
 audio = audio(1:n*floor(length(audio)/n));
 audio = reshape(audio,[n,floor(length(audio)/n)]); %原audio竖着排列，一列1600个样点
 %二维DWT，取低频分量
+[cA,cD] = dwt(audio(:,50),'haar');
+[cA2,cD2] = dwt(cA,'haar');
 %DCT，取前1/4
+Y = dct(cA2);
+Y = Y(1:100,:);
+jsi = reshape(Y,[10,10]);
+[U,S,V] = svd(jsi);
 %SVD，取对角阵，水印嵌入
 %逆变换
