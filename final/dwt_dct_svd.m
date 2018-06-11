@@ -6,16 +6,16 @@ cuc_resize = rgb2gray(cuc_resize);
 cuc_resize = imbinarize(cuc_resize);   %二值化
 imshow(cuc_resize);
 [M,N] = size(cuc_resize);
-cuc_resize = reshape(cuc_resize,[1,M*N]);   %转换为1维
+cuc_resize = reshape(cuc_resize',[M*N,1]);   %转换为1维
 %载入音频，分段
 [audio,fs] = audioread('校园里有一排年轻的白杨.wav');
-audio = audio(:,1);
+audio = audio(:,1); %一个声道
 figure(2);
 subplot(2,1,1);plot(audio);ylim([-1.5 1.5]);
 n = 1600; %分段长度
 len = n*floor(length(audio)/n);%保留的音频长度
 audio = audio(1:len);
-audio_reshape = reshape(audio,[n,floor(length(audio)/n)]); %原audio竖着排列，一列1600个样点
+audio_reshape = reshape(audio,[n,len/n]); %原audio竖着排列，一列1600个样点
 
 delta = 0.5;%水印参数
 audio1 = audio_reshape;
@@ -25,7 +25,7 @@ for i=1:size(cuc_resize)
     [cA2,cD2] = dwt(cA1,'haar');
     %DCT，取前1/4
     cA2dct = dct(cA2);
-    Y = cA2dct(1:100,:);
+    Y = cA2dct(1:100);
     jsi = reshape(Y,[10,10]);
     [U,S,V] = svd(jsi);
     S1 = S;
