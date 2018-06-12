@@ -31,12 +31,12 @@ imwrite(watermark','extract_cuc.jpg');
 
 %计算分段平均信噪比
 for j=1:length(audio)
-    if(audio(:,i)==audio1(:,i))
-        SNR(i)=100;
+    if(audio(:,j)==audio1(:,j))
+        SNR(j)=100;
     else
-        o = 1/n*sum((audio1(:,i)-mean(audio1(:,i))).^2);
-        d = 1/n*sum((audio1(:,i)-audio(:,i)).^2);
-        SNR(i)=10*log10(o/d);
+        o = 1/n*sum((audio1(:,j)-mean(audio1(:,j))).^2);
+        d = 1/n*sum((audio1(:,j)-audio(:,j)).^2);
+        SNR(j)=10*log10(o/d);
     end
 end
 aveSNR = 1/length(SNR)*sum(SNR)
