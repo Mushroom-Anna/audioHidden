@@ -15,6 +15,7 @@ subplot(2,1,1);plot(audio);ylim([-1.5 1.5]);
 n = 1600; %分段长度
 len = n*floor(length(audio)/n);%保留的音频长度
 audio = audio(1:len);
+audiowrite('input.wav',audio,fs);
 audio_reshape = reshape(audio,[n,len/n]); %原audio竖着排列，一列1600个样点
 
 delta = 0.5;%水印参数
