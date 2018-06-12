@@ -7,6 +7,18 @@ audio = output;
 [audio1,fs1] = audioread('input.wav');   %载入原始音频，计算信噪比
 audio1 = reshape(audio1,[n,length(audio1)/n]);
 
+%计算分段平均信噪比(有水印，未受到攻击的音频和无水印音频)
+for j=1:length(output)
+    if(output(:,j)==audio1(:,j))
+        SNR(j)=100;
+    else
+        o = 1/n*sum((audio1(:,j)-mean(audio1(:,j))).^2);
+        d = 1/n*sum((audio1(:,j)-output(:,j)).^2);
+        SNR(j)=10*log10(o/d);
+    end
+end
+aveSNR = 1/length(SNR)*sum(SNR)
+
 %%%对音频进行攻击
 %audio = awgn(audio,20);%添加高斯白噪
 
@@ -48,17 +60,11 @@ watermark = reshape(watermark,[73,73]);
 imshow(watermark');
 imwrite(watermark','extract_cuc.jpg');
 
-%计算分段平均信噪比(有水印，未受到攻击的音频和无水印音频)
-for j=1:length(output)
-    if(output(:,j)==audio1(:,j))
-        SNR(j)=100;
-    else
-        o = 1/n*sum((audio1(:,j)-mean(audio1(:,j))).^2);
-        d = 1/n*sum((audio1(:,j)-output(:,j)).^2);
-        SNR(j)=10*log10(o/d);
-    end
-end
-aveSNR = 1/length(SNR)*sum(SNR)
-
+%计算NC值和误码率
+origin_watermark = imread('origin_watermark.jpg');
+origin_watermark = double(origin_watermark); %读入时为unit8，无法参与下一步计算
+NC = corrcoef(watermark,origin_watermark);
+NC = NC(2,1)  %(1,1)和(2,2)自相关(1,2)(2,1)互相关
+[number,ratio] = symerr(watermark,origin_watermark) 
 
 

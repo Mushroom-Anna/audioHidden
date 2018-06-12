@@ -5,6 +5,7 @@ cuc_resize = imresize(cuc,[73,73]); %变小
 cuc_resize = rgb2gray(cuc_resize);
 cuc_resize = imbinarize(cuc_resize);   %二值化
 imshow(cuc_resize);
+imwrite(cuc_resize,'origin_watermark.jpg');
 [M,N] = size(cuc_resize);
 cuc_resize = reshape(cuc_resize',[M*N,1]);   %转换为1维
 %载入音频，分段
